@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Now</title>
   <link href="https://fonts.googleapis.com/css2?family=Castoro+Titling&display=swap" rel="stylesheet">
   <style>
@@ -21,33 +21,30 @@
     html, body { margin: 0; padding: 0; height: 100%; background: black; }
     .container { position: relative; height: 100vh; width: 100vw; overflow: hidden; }
 
-
     video.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
 
-   
+    /* --- SFERA overlay --- */
     img.overlay {
       position: absolute; top: 0; left: 0; width: 100vw; height: auto;
       pointer-events: none; user-select: none; display: block; z-index: 1;
       transition: opacity .35s ease, visibility .35s ease, filter .35s ease, transform .35s ease;
     }
-    
     body.is-about .overlay {
-      z-index: 2;                 /* above .about-bg (1), below .about-layer (3) */
-      filter: blur(10px);         /* <-- adjusted blur (less severe) */
-      transform: scale(1.1);      /* hide blur edges */
+      z-index: 2;
+      filter: blur(10px);
+      transform: scale(1.1);
       opacity: 1;
       visibility: visible;
     }
 
- 
+    /* --- GIF bar --- */
     .gif-bar {
       position: absolute; left: 20px; right: 20px; bottom: 20px;
       display: flex; align-items: flex-end; justify-content: space-between; gap: 20px;
       z-index: 2; max-height: calc(100vh - 90px - 20px);
-      transition: opacity .35s ease, visibility .35s ease, transform .35s ease;
+      transition: opacity .35s ease, visibility .35s ease, transform .35s ease, top .25s ease, bottom .25s ease;
     }
     .gif-card { position: relative; display: inline-block; text-align: center; }
-
 
     .gif-link { position: relative; display: inline-block; text-decoration: none; }
     .gif-img {
@@ -55,23 +52,20 @@
       max-width: min(22vw, 300px); max-height: 100%;
       image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;
       margin: 0 auto; transition: transform .3s ease; z-index: 3;
-      pointer-events: none; /* clicks go to the anchor wrapper */
+      pointer-events: none;
     }
     .gif-label {
       position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
       font-family: 'Castoro Titling', serif; font-size: 2.5rem;
       color: var(--brand-yellow); text-decoration: none; background: transparent;
       padding: 6px 20px; border-radius: 6px; z-index: 4;
-  
       text-shadow: 0 0 8px #ffa408, 0 0 16px #ffa408;
-      pointer-events: none; 
+      pointer-events: none;
     }
-
 
     .glow-img {
       position: absolute; left: 50%;
-
-      bottom: 20px; 
+      bottom: 20px;
       transform: translate(-50%, 20px);
       max-width: 120%; pointer-events: none; opacity: 0; transition: opacity .3s ease;
       z-index: 2;
@@ -79,12 +73,11 @@
     .gif-card:hover .glow-img,
     .gif-card:focus-within .glow-img { opacity: 1; }
 
-
+    /* --- About --- */
     .about-bg {
       position: absolute; inset: 0; width: 100%; height: 100%;
       object-fit: cover; z-index: 1; opacity: 0; visibility: hidden; transition: opacity .4s ease, visibility .4s ease;
     }
-
 
     .about-layer {
       position: absolute; inset: 0; z-index: 3;
@@ -94,7 +87,7 @@
 
     .about-wrap {
       position: absolute; inset: 0;
-      padding: 96px 16px 16px 16px; 
+      padding: calc(96px + env(safe-area-inset-top, 0px)) 16px 16px 16px;
       box-sizing: border-box;
 
       font-family: 'Castoro Titling', serif;
@@ -102,17 +95,19 @@
       letter-spacing: 0.02em;
       color: #333333;
 
-      font-size: var(--about-fs-max)px; 
+      font-size: var(--about-fs-max)px;
       line-height: var(--about-line);
 
-      overflow: hidden;   
+      overflow: hidden;
     }
-
     .about-wrap p {
       margin: 0 0 0.9em 0;
       text-align: left;
-      hyphens: auto;
-      -webkit-hyphens: auto;
+      /* no hyphenation */
+      hyphens: none;
+      -webkit-hyphens: none;
+      -ms-hyphens: none;
+      overflow-wrap: anywhere; /* avoids overflow without hyphens */
     }
 
     .about-wrap span.bg {
@@ -122,10 +117,10 @@
       line-height: inherit;
     }
 
- 
+    /* --- Back Buttons --- */
     .about-back,
     .contact-back {
-      position: absolute; z-index: 5;
+      position: absolute; z-index: 1000;
       font-family: 'Castoro Titling', serif; font-size: 1.35rem;
       color: var(--brand-yellow); background: transparent; border: none;
       padding: 6px 10px; text-decoration: none;
@@ -134,8 +129,8 @@
       transition: transform .15s ease, text-shadow .2s ease;
       pointer-events: auto;
     }
-    .about-back { top: 14px; right: 16px; }
-    .contact-back { right: 16px; bottom: 16px; }
+    .about-back { top: calc(14px + env(safe-area-inset-top, 0px)); right: calc(16px + env(safe-area-inset-right, 0px)); }
+    .contact-back { right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
 
     .about-back:hover, .contact-back:hover { transform: translateY(-1px); }
     .about-back:focus-visible, .contact-back:focus-visible {
@@ -143,45 +138,45 @@
       text-shadow: 0 0 12px var(--glow-orange), 0 0 24px var(--glow-orange);
     }
 
-
+    /* --- Contact --- */
     .contact-layer {
       position: absolute; inset: 0; z-index: 3;
       display: grid; place-items: center;
       opacity: 0; visibility: hidden; transition: opacity .35s ease, visibility .35s ease;
       pointer-events: none;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      box-sizing: border-box;
     }
     .contact-card {
       position: relative;
-      width: 650px;                 /* +50px larger */
-      max-width: 90vw;
-      transform: translateY(200px); /* move down on desktop */
+      width: 650px; max-width: 90vw;
+      transform: translateY(200px);
       display: grid; place-items: center;
     }
-.contact-img {
-  width: 150%;
-  height: auto;
-  object-fit: contain;
-  display: block;
-  filter: drop-shadow(0 10px 30px rgba(0,0,0,.35));
-  margin-bottom: 40px; 
-}
-   .contact-email {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center; 
-  transform: translateY(-30px); 
-  
-  font-family: 'Castoro Titling', serif;
-  font-size: clamp(18px, 3.2vw, 28px);
-  color: var(--brand-orange);
-  text-decoration: none;
-  text-transform: none; 
-  text-shadow:
-    0 2px 10px rgb(255, 255, 255),
-    0 0 10px var(--brand-yellow),
-    0 0 14px rgb(255, 162, 48);
-}
+    .contact-img {
+      width: 150%;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 10px 30px rgba(0,0,0,.35));
+      margin-bottom: 40px;
+    }
+    .contact-email {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      transform: translateY(-30px);
+      font-family: 'Castoro Titling', serif;
+      font-size: clamp(18px, 3.2vw, 28px);
+      color: var(--brand-orange);
+      text-decoration: none;
+      text-transform: none;
+      text-shadow:
+        0 2px 10px rgb(255, 255, 255),
+        0 0 10px var(--brand-yellow),
+        0 0 14px rgb(255, 162, 48);
+    }
 
     body.is-about .gif-bar,
     body.is-contact .gif-bar { opacity: 0; visibility: hidden; transform: translateY(10px); }
@@ -189,37 +184,36 @@
     body.is-about .about-layer{ opacity: 1; visibility: visible; pointer-events: auto; }
     body.is-contact .contact-layer{ opacity: 1; visibility: visible; pointer-events: auto; }
 
+    /* --- Desktop tweaks --- */
+    @media (min-width: 769px) {
+      .contact-layer { padding-bottom: 30px; box-sizing: border-box; }
+    }
 
-@media (min-width: 769px) {
-  .contact-layer { padding-bottom: 30px; box-sizing: border-box; }
-}
-
-@media (max-width: 768px) {
-      
+    /* --- Mobile layout: stack GIFs directly under SFERA.png --- */
+    @media (max-width: 768px) {
       .gif-bar {
         flex-direction: column;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: flex-start;
         gap: 12px;
-        left: 12px; right: 12px; bottom: 16px;
+        left: 12px; right: 12px;
+        /* top is dynamically set via JS to sit right under .overlay */
+        bottom: auto; /* JS will manage .style.top */
       }
       .gif-img { max-width: min(80vw, 360px); max-height: 26vh; }
       .gif-label { font-size: clamp(22px, 8vw, 36px); bottom: 10px; }
 
-      
       .glow-img { max-width: 140%; transform: translate(-40%); }
 
-      
       .contact-card { transform: none; width: min(650px, 92vw); }
 
-      
-      .about-wrap { padding-top: 120px; }
+      .about-wrap { padding-top: calc(120px + env(safe-area-inset-top, 0px)); }
     }
 
     @media (max-width: 420px) {
       .gif-img { max-width: 88vw; }
       .gif-label { font-size: clamp(18px, 9vw, 30px); }
-      .about-wrap { padding-inline: 12px; padding-top: 124px; }
+      .about-wrap { padding-inline: 12px; padding-top: calc(124px + env(safe-area-inset-top, 0px)); }
     }
   </style>
 </head>
@@ -230,8 +224,7 @@
 
     <img class="overlay" src="media/SFERA.png" alt="Overlay image" />
 
-
-    <div class="gif-bar">
+    <div class="gif-bar" id="gifBar">
       <div class="gif-card left">
         <img class="glow-img" src="media/GLOW.png" alt="Glow" />
         <a href="#about" class="gif-link" id="aboutLink" aria-label="Open About">
@@ -249,9 +242,7 @@
       </div>
     </div>
 
-
     <img class="about-bg" src="media/about.png" alt="About background" />
-
 
     <div class="about-layer" aria-hidden="true">
       <a href="#" class="about-back" id="aboutBack">BACK</a>
@@ -264,17 +255,17 @@
       </div>
     </div>
 
-
     <div class="contact-layer" aria-hidden="true">
       <a href="#" class="contact-back" id="contactBack">BACK</a>
       <div class="contact-card" role="dialog" aria-label="Contact Sfera">
         <img class="contact-img" src="media/contact.png" alt="Contact graphic" />
-        <a class="contact-email" href="mailto:sfera@email.com">hi@sferastudio.net</a>
+        <!-- fixed mailto to match visible address -->
+        <a class="contact-email" href="mailto:hi@sferastudio.net">hi@sferastudio.net</a>
       </div>
     </div>
 
-
     <script>
+      /* --- Robust GIF loader --- */
       (function(){
         function tryLoad(id, candidates){
           const el = document.getElementById(id); if (!el) return;
@@ -293,6 +284,7 @@
         tryLoad('gifRight', ['output2.gif','overlay2.gif','animation2.gif']);
       })();
 
+      /* --- Mode switching + about fitting --- */
       (function(){
         const body = document.body;
         const aboutLink = document.getElementById('aboutLink');
@@ -301,32 +293,17 @@
         const contactBack = document.getElementById('contactBack');
         const aboutWrap = document.getElementById('aboutWrap');
 
-        function clearModes() {
-          body.classList.remove('is-about', 'is-contact');
-        }
+        function clearModes() { body.classList.remove('is-about', 'is-contact'); }
 
-        function enterAbout(e){
-          if (e) e.preventDefault();
-          clearModes();
-          body.classList.add('is-about');
-          fitAbout();
-        }
-        function enterContact(e){
-          if (e) e.preventDefault();
-          clearModes();
-          body.classList.add('is-contact');
-        }
-        function exitAll(e){
-          if (e) e.preventDefault();
-          clearModes();
-        }
+        function enterAbout(e){ if (e) e.preventDefault(); clearModes(); body.classList.add('is-about'); fitAbout(); }
+        function enterContact(e){ if (e) e.preventDefault(); clearModes(); body.classList.add('is-contact'); }
+        function exitAll(e){ if (e) e.preventDefault(); clearModes(); }
 
         if (aboutLink)   aboutLink.addEventListener('click', enterAbout);
         if (contactLink) contactLink.addEventListener('click', enterContact);
         if (aboutBack)   aboutBack.addEventListener('click', exitAll);
         if (contactBack) contactBack.addEventListener('click', exitAll);
         document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') exitAll(); });
-
 
         let pending = false;
         function fitAbout(){
@@ -379,6 +356,49 @@
           if (!body.classList.contains('is-about')) return;
           fitAbout();
         }, { passive: true });
+      })();
+
+      /* --- Mobile-only: place GIF bar directly under SFERA.png --- */
+      (function(){
+        const bar = document.getElementById('gifBar');
+        const overlay = document.querySelector('img.overlay');
+        if (!bar || !overlay) return;
+
+        const mq = window.matchMedia('(max-width: 768px)');
+
+        function placeBar(){
+          if (mq.matches) {
+            // Compute overlay height (after it loads / resizes)
+            const rect = overlay.getBoundingClientRect();
+            // Add a tiny gap below SFERA.png
+            const gap = 0;
+            bar.style.top = Math.ceil(rect.height + gap) + 'px';
+            bar.style.bottom = 'auto';
+          } else {
+            // Desktop defaults
+            bar.style.top = '';
+            bar.style.bottom = '20px';
+          }
+        }
+
+        // Reposition on key moments
+        placeBar();
+        window.addEventListener('resize', placeBar, { passive: true });
+        window.addEventListener('orientationchange', placeBar);
+
+        // If/when the overlay image finishes loading or changes size
+        if (overlay.complete) {
+          // still call once to ensure correct measured height
+          placeBar();
+        } else {
+          overlay.addEventListener('load', placeBar);
+        }
+
+        // Watch overlay size changes (for dynamic viewport UI chrome)
+        if ('ResizeObserver' in window) {
+          const ro = new ResizeObserver(placeBar);
+          ro.observe(overlay);
+        }
       })();
     </script>
   </div>

@@ -21,16 +21,16 @@
     html, body { margin: 0; padding: 0; height: 100%; background: black; }
     .container { position: relative; height: 100vh; width: 100vw; overflow: hidden; }
 
-    /* Background video */
+
     video.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
 
-    /* SFERA overlay */
+   
     img.overlay {
       position: absolute; top: 0; left: 0; width: 100vw; height: auto;
       pointer-events: none; user-select: none; display: block; z-index: 1;
       transition: opacity .35s ease, visibility .35s ease, filter .35s ease, transform .35s ease;
     }
-    /* Keep SFERA on About, blur it, and raise above about-bg but below text */
+    
     body.is-about .overlay {
       z-index: 2;                 /* above .about-bg (1), below .about-layer (3) */
       filter: blur(10px);         /* <-- adjusted blur (less severe) */
@@ -39,7 +39,7 @@
       visibility: visible;
     }
 
-    /* Bottom GIF dock (hidden in About or Contact mode) */
+ 
     .gif-bar {
       position: absolute; left: 20px; right: 20px; bottom: 20px;
       display: flex; align-items: flex-end; justify-content: space-between; gap: 20px;
@@ -48,7 +48,7 @@
     }
     .gif-card { position: relative; display: inline-block; text-align: center; }
 
-    /* Make the GIF + label one link */
+
     .gif-link { position: relative; display: inline-block; text-decoration: none; }
     .gif-img {
       position: relative; display: block; height: auto; width: auto;
@@ -62,40 +62,39 @@
       font-family: 'Castoro Titling', serif; font-size: 2.5rem;
       color: var(--brand-yellow); text-decoration: none; background: transparent;
       padding: 6px 20px; border-radius: 6px; z-index: 4;
-      /* Changed: remove dark drop shadow, add subtle white glow */
+  
       text-shadow: 0 0 8px #ffa408, 0 0 16px #ffa408;
-      pointer-events: none; /* entire card is already clickable via .gif-link */
+      pointer-events: none; 
     }
 
-    /* Hover glow under GIFs */
+
     .glow-img {
       position: absolute; left: 50%;
-      /* move 20px further down than before */
-      bottom: 20px; /* keeps baseline height */
-      transform: translate(-50%, 20px); /* push down visually by 20px */
+
+      bottom: 20px; 
+      transform: translate(-50%, 20px);
       max-width: 120%; pointer-events: none; opacity: 0; transition: opacity .3s ease;
       z-index: 2;
     }
     .gif-card:hover .glow-img,
     .gif-card:focus-within .glow-img { opacity: 1; }
 
-    /* ABOUT mode background image */
+
     .about-bg {
       position: absolute; inset: 0; width: 100%; height: 100%;
       object-fit: cover; z-index: 1; opacity: 0; visibility: hidden; transition: opacity .4s ease, visibility .4s ease;
     }
 
-    /* ABOUT text layer — fill screen, not centered grid */
+
     .about-layer {
       position: absolute; inset: 0; z-index: 3;
       opacity: 0; visibility: hidden; transition: opacity .4s ease, visibility .4s ease;
       pointer-events: none;
     }
 
-    /* Fill the viewport and let JS size the text so it fits without scroll */
     .about-wrap {
       position: absolute; inset: 0;
-      padding: 96px 16px 16px 16px; /* more top room on small screens too */
+      padding: 96px 16px 16px 16px; 
       box-sizing: border-box;
 
       font-family: 'Castoro Titling', serif;
@@ -103,10 +102,10 @@
       letter-spacing: 0.02em;
       color: #333333;
 
-      font-size: var(--about-fs-max)px; /* default; JS will fit */
+      font-size: var(--about-fs-max)px; 
       line-height: var(--about-line);
 
-      overflow: hidden;      /* no scroll – we always fit */
+      overflow: hidden;   
     }
 
     .about-wrap p {
@@ -116,7 +115,6 @@
       -webkit-hyphens: auto;
     }
 
-    /* Per-line white background strips hugging the text (remove background line to drop strips) */
     .about-wrap span.bg {
       background: #ffff;
       padding: var(--about-pad-y) var(--about-pad-x);
@@ -124,7 +122,7 @@
       line-height: inherit;
     }
 
-    /* Back button — yellow text, no box, orange glow */
+ 
     .about-back,
     .contact-back {
       position: absolute; z-index: 5;
@@ -145,7 +143,7 @@
       text-shadow: 0 0 12px var(--glow-orange), 0 0 24px var(--glow-orange);
     }
 
-    /* Contact layer */
+
     .contact-layer {
       position: absolute; inset: 0; z-index: 3;
       display: grid; place-items: center;
@@ -165,42 +163,39 @@
   object-fit: contain;
   display: block;
   filter: drop-shadow(0 10px 30px rgba(0,0,0,.35));
-  margin-bottom: 40px; /* ensures 40px space below */
+  margin-bottom: 40px; 
 }
    .contact-email {
   position: absolute;
   inset: 0;
   display: grid;
-  place-items: center; /* stays centered on the image */
-  transform: translateY(-30px); /* shift 30px upwards */
+  place-items: center; 
+  transform: translateY(-30px); 
   
   font-family: 'Castoro Titling', serif;
   font-size: clamp(18px, 3.2vw, 28px);
   color: var(--brand-orange);
   text-decoration: none;
-  text-transform: none; /* allow mixed case */
+  text-transform: none; 
   text-shadow:
     0 2px 10px rgb(255, 255, 255),
     0 0 10px var(--brand-yellow),
     0 0 14px rgb(255, 162, 48);
 }
 
-    /* Mode toggles */
     body.is-about .gif-bar,
     body.is-contact .gif-bar { opacity: 0; visibility: hidden; transform: translateY(10px); }
     body.is-about .about-bg   { opacity: 1; visibility: visible; }
     body.is-about .about-layer{ opacity: 1; visibility: visible; pointer-events: auto; }
     body.is-contact .contact-layer{ opacity: 1; visibility: visible; pointer-events: auto; }
 
-    /* ------------------ Responsive tweaks ------------------ */
 
-/* Desktop: ensure at least 30px gap below contact image */
 @media (min-width: 769px) {
   .contact-layer { padding-bottom: 30px; box-sizing: border-box; }
 }
 
 @media (max-width: 768px) {
-      /* Stack ABOUT and CONTACT vertically, centered, with safe spacing from SFERA.png */
+      
       .gif-bar {
         flex-direction: column;
         align-items: center;
@@ -211,13 +206,13 @@
       .gif-img { max-width: min(80vw, 360px); max-height: 26vh; }
       .gif-label { font-size: clamp(22px, 8vw, 36px); bottom: 10px; }
 
-      /* Keep the glow underlays a bit lower so labels don't collide */
-      .glow-img { max-width: 140%; transform: translate(-50%, 24px); }
+      
+      .glow-img { max-width: 140%; transform: translate(-40%); }
 
-      /* Contact screen: center it (not bottom) on mobile */
+      
       .contact-card { transform: none; width: min(650px, 92vw); }
 
-      /* About screen: give extra headroom to avoid SFERA overlap */
+      
       .about-wrap { padding-top: 120px; }
     }
 
@@ -230,13 +225,12 @@
 </head>
 <body>
   <div class="container">
-    <!-- Background stays visible in all modes -->
+
     <video class="bg" src="media/background.mp4" autoplay muted loop playsinline preload="auto" poster="media/poster.jpg"></video>
 
-    <!-- Default overlay (also shows on About, blurred by CSS) -->
     <img class="overlay" src="media/SFERA.png" alt="Overlay image" />
 
-    <!-- GIFs (hidden in About/Contact modes) -->
+
     <div class="gif-bar">
       <div class="gif-card left">
         <img class="glow-img" src="media/GLOW.png" alt="Glow" />
@@ -255,10 +249,10 @@
       </div>
     </div>
 
-    <!-- ABOUT mode background image -->
+
     <img class="about-bg" src="media/about.png" alt="About background" />
 
-    <!-- ABOUT text layer -->
+
     <div class="about-layer" aria-hidden="true">
       <a href="#" class="about-back" id="aboutBack">BACK</a>
       <div class="about-wrap" role="dialog" aria-label="About Sfera" id="aboutWrap">
@@ -270,7 +264,7 @@
       </div>
     </div>
 
-    <!-- CONTACT layer -->
+
     <div class="contact-layer" aria-hidden="true">
       <a href="#" class="contact-back" id="contactBack">BACK</a>
       <div class="contact-card" role="dialog" aria-label="Contact Sfera">
@@ -279,7 +273,7 @@
       </div>
     </div>
 
-    <!-- GIF fallback loader + Mode toggles + Fit-text -->
+
     <script>
       (function(){
         function tryLoad(id, candidates){
@@ -333,7 +327,7 @@
         if (contactBack) contactBack.addEventListener('click', exitAll);
         document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') exitAll(); });
 
-        /* ---- Fit-text algorithm: largest font-size that fits without scroll ---- */
+
         let pending = false;
         function fitAbout(){
           if (!aboutWrap || !body.classList.contains('is-about')) return;

@@ -62,14 +62,17 @@
       font-family: 'Castoro Titling', serif; font-size: 2.5rem;
       color: var(--brand-yellow); text-decoration: none; background: transparent;
       padding: 6px 20px; border-radius: 6px; z-index: 4;
-      text-shadow: 0 2px 4px rgba(0,0,0,.5);
+      /* Changed: remove dark drop shadow, add subtle white glow */
+      text-shadow: 0 0 8px #ffa408, 0 0 16px #ffa408;
       pointer-events: none; /* entire card is already clickable via .gif-link */
     }
 
     /* Hover glow under GIFs */
     .glow-img {
-      position: absolute; left: 50%; transform: translateX(-50%);
-      bottom: 20px;
+      position: absolute; left: 50%;
+      /* move 20px further down than before */
+      bottom: 20px; /* keeps baseline height */
+      transform: translate(-50%, 20px); /* push down visually by 20px */
       max-width: 120%; pointer-events: none; opacity: 0; transition: opacity .3s ease;
       z-index: 2;
     }
@@ -92,7 +95,7 @@
     /* Fill the viewport and let JS size the text so it fits without scroll */
     .about-wrap {
       position: absolute; inset: 0;
-      padding: 80px 16px 16px 16px; /* top reserves for BACK */
+      padding: 96px 16px 16px 16px; /* more top room on small screens too */
       box-sizing: border-box;
 
       font-family: 'Castoro Titling', serif;
@@ -115,7 +118,7 @@
 
     /* Per-line white background strips hugging the text (remove background line to drop strips) */
     .about-wrap span.bg {
-      background: #ffffff;
+      background: #ffff;
       padding: var(--about-pad-y) var(--about-pad-x);
       -webkit-box-decoration-break: clone; box-decoration-break: clone;
       line-height: inherit;
@@ -144,38 +147,42 @@
 
     /* Contact layer */
     .contact-layer {
-  position: absolute; inset: 0; z-index: 3;
-  display: grid; place-items: center;
-  opacity: 0; visibility: hidden; transition: opacity .35s ease, visibility .35s ease;
-  pointer-events: none;
-}
-.contact-card {
-  position: relative;
-  width: 600px;                 /* bigger */
-  max-width: 90vw;
-  transform: translateY(200px); /* move down */
-  display: grid; place-items: center;
-}
+      position: absolute; inset: 0; z-index: 3;
+      display: grid; place-items: center;
+      opacity: 0; visibility: hidden; transition: opacity .35s ease, visibility .35s ease;
+      pointer-events: none;
+    }
+    .contact-card {
+      position: relative;
+      width: 650px;                 /* +50px larger */
+      max-width: 90vw;
+      transform: translateY(200px); /* move down on desktop */
+      display: grid; place-items: center;
+    }
 .contact-img {
-  width: 100%;
+  width: 150%;
   height: auto;
   object-fit: contain;
   display: block;
   filter: drop-shadow(0 10px 30px rgba(0,0,0,.35));
+  margin-bottom: 40px; /* ensures 40px space below */
 }
-.contact-email {
+   .contact-email {
   position: absolute;
   inset: 0;
-  display: grid; place-items: center;
+  display: grid;
+  place-items: center; /* stays centered on the image */
+  transform: translateY(-30px); /* shift 30px upwards */
+  
   font-family: 'Castoro Titling', serif;
   font-size: clamp(18px, 3.2vw, 28px);
   color: var(--brand-orange);
   text-decoration: none;
   text-transform: none; /* allow mixed case */
   text-shadow:
-    0 2px 10px rgba(0,0,0,.35),
+    0 2px 10px rgb(255, 255, 255),
     0 0 10px var(--brand-yellow),
-    0 0 14px rgba(255,140,0,.4);
+    0 0 14px rgb(255, 162, 48);
 }
 
     /* Mode toggles */
@@ -184,6 +191,41 @@
     body.is-about .about-bg   { opacity: 1; visibility: visible; }
     body.is-about .about-layer{ opacity: 1; visibility: visible; pointer-events: auto; }
     body.is-contact .contact-layer{ opacity: 1; visibility: visible; pointer-events: auto; }
+
+    /* ------------------ Responsive tweaks ------------------ */
+
+/* Desktop: ensure at least 30px gap below contact image */
+@media (min-width: 769px) {
+  .contact-layer { padding-bottom: 30px; box-sizing: border-box; }
+}
+
+@media (max-width: 768px) {
+      /* Stack ABOUT and CONTACT vertically, centered, with safe spacing from SFERA.png */
+      .gif-bar {
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 12px;
+        left: 12px; right: 12px; bottom: 16px;
+      }
+      .gif-img { max-width: min(80vw, 360px); max-height: 26vh; }
+      .gif-label { font-size: clamp(22px, 8vw, 36px); bottom: 10px; }
+
+      /* Keep the glow underlays a bit lower so labels don't collide */
+      .glow-img { max-width: 140%; transform: translate(-50%, 24px); }
+
+      /* Contact screen: center it (not bottom) on mobile */
+      .contact-card { transform: none; width: min(650px, 92vw); }
+
+      /* About screen: give extra headroom to avoid SFERA overlap */
+      .about-wrap { padding-top: 120px; }
+    }
+
+    @media (max-width: 420px) {
+      .gif-img { max-width: 88vw; }
+      .gif-label { font-size: clamp(18px, 9vw, 30px); }
+      .about-wrap { padding-inline: 12px; padding-top: 124px; }
+    }
   </style>
 </head>
 <body>
@@ -233,7 +275,7 @@
       <a href="#" class="contact-back" id="contactBack">BACK</a>
       <div class="contact-card" role="dialog" aria-label="Contact Sfera">
         <img class="contact-img" src="media/contact.png" alt="Contact graphic" />
-        <a class="contact-email" href="mailto:sfera@email.com">sfera@email.com</a>
+        <a class="contact-email" href="mailto:sfera@email.com">hi@sferastudio.net</a>
       </div>
     </div>
 
